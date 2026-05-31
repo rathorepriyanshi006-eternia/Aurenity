@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>D3 — Technical Architecture Document</title>
+    <style>
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            color: #333333;
+            line-height: 1.6;
+            margin: 40px auto;
+            max-width: 800px;
+            padding: 0 20px;
+            background-color: #ffffff;
+        }
+        h1 {
+            font-size: 28px;
+            color: #1e3a8a;
+            border-bottom: 2px solid #3b82f6;
+            padding-bottom: 8px;
+            margin-top: 40px;
+        }
+        h2 {
+            font-size: 20px;
+            color: #2563eb;
+            margin-top: 30px;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 5px;
+        }
+        h3 {
+            font-size: 16px;
+            color: #1d4ed8;
+            margin-top: 20px;
+        }
+        p {
+            font-size: 14px;
+            margin-bottom: 16px;
+            text-align: justify;
+        }
+        ul {
+            font-size: 14px;
+            margin-bottom: 16px;
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 6px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 13px;
+        }
+        th, td {
+            border: 1px solid #cbd5e1;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f1f5f9;
+            color: #0f172a;
+            font-weight: 600;
+        }
+        tr:nth-child(even) td {
+            background-color: #f8fafc;
+        }
+        .code-block {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 15px;
+            font-family: Consolas, Monaco, monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            margin: 20px 0;
+            white-space: pre-wrap;
+            color: #0f172a;
+        }
+        .info-box {
+            background-color: #eff6ff;
+            border-left: 4px solid #3b82f6;
+            padding: 12px 16px;
+            margin: 20px 0;
+            border-radius: 0 6px 6px 0;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1 style="text-align: center; margin-bottom: 40px; border-bottom: none;">D3 — Technical Architecture Document</h1>
+
+    <h2>Executive Summary</h2>
+    <p>Aurenity X is not a traditional passive Application Programming Interface (API) scanner. It represents a paradigm shift in SecOps: a self-healing, self-reasoning <strong>Autonomous Cognitive API Immune System</strong>. By shifting API security from reactive, stateless checking to persistent, graph-augmented, multi-agent cognitive understanding, Aurenity X maps, simulates, and defends modern enterprise API environments in real-time.</p>
+
+    <h2>1. System Architecture Pipeline Diagram</h2>
+    <p>The operational framework of Aurenity X follows a structured multi-layer pipeline: data sources flow into discovery and machine learning layers, which generate topology definitions stored in Neo4j Aura and Supabase, ultimately feeding the cognitive RAG queries and digital-twin frontend views.</p>
+    
+    <div class="code-block">
+[0. DATA SOURCES]
+GitHub Repositories, Swagger/OpenAPI Specs, Commit History, Dependency Configurations
+      ↓
+[1. DISCOVERY LAYER]
+GitHub Code Analyzer, Grok Repository Intelligence, API Extraction Engine, API DNA Generator
+      ↓
+[2. ML INTELLIGENCE LAYER]
+Feature Engineering (documentation_exists, days_since_last_use)
+Classifier (Random Forest, Gradient Boosting, XGBoost) -> Zombie vs. Shadow API
+      ↓
+[3. DATA STORAGE LAYER]
+Supabase PostgreSQL (Scan Results) & Neo4j Aura (Property Graph) & Qdrant Vector DB
+      ↓
+[4. AI COGNITIVE LAYER]
+GraphRAG Hybrid Indexing, OpenAI GPT-4o, LangGraph Workflows, CrewAI Agents, Mem0 Persistence
+      ↓
+[5. DIGITAL TWIN LAYER]
+Interactive 2D Topology (SVG) & 3D Holograms (WebGL / Three.js) & Sandbox Simulations
+      ↓
+[6. APPLICATION LAYER]
+FastAPI & Celery Queue Async Backend ← (WebSockets & REST) → Next.js 15 App Client
+    </div>
+
+    <h2>2. Technical Explanation</h2>
+
+    <h3>2.1 Discovery & ML Pipelines</h3>
+    <p>Aurenity X ingests codebases directly from repository endpoints. Raw static files parse through the <strong>GitHub Code Analyzer</strong> and <strong>Grok Repository Intelligence</strong> to construct endpoint schemas, extraction variables, and configurations.</p>
+    <p>During discovery, three key artifacts are extracted:</p>
+    <ul>
+        <li><strong>API</strong>: Represents route, protocol, file source, handler, and parameters.</li>
+        <li><strong>API_DOC</strong>: Tracks presence of OpenAPI inline/external documents or validation comments.</li>
+        <li><strong>API_LASTDATE</strong>: Tracks the timestamp of the last codebase modifier change or request activity.</li>
+    </ul>
+    <p>These outputs enter the <strong>ML Intelligence Layer</strong>. Features are constructed (<em>days_since_last_use</em>, <em>documentation_exists</em>) and passed to our Modular Classification engines:</p>
+    <ul>
+        <li><strong>Zombie API Classifier</strong>: Labels endpoints where <em>days_since_last_use > 50</em>, representing neglected technical debt.</li>
+        <li><strong>Shadow API Classifier</strong>: Labels active endpoints (<em>days_since_last_use &le; 50</em>) lacking verified documentation/owners.</li>
+        <li><strong>Documentation Classification</strong>: Labels endpoints as <em>Documented</em> or <em>Undocumented</em>.</li>
+    </ul>
+    <p>The model architecture is modularly swappable (Rule-Based &rarr; Random Forest / Gradient Boosting ensemble &rarr; XGBoost / Isolation Forest) without changing the pipeline stages.</p>
+
+    <h3>2.2 Graph & Digital Twin Engine</h3>
+    <p>Rather than presenting static list-based inventories, Aurenity X resolves relationships. Endpoint metadata builds a property graph mapped into <strong>Neo4j</strong>.</p>
+    <ul>
+        <li><strong>Relationship Resolution Engine</strong>: Calculates logical path connections (e.g. <em>Client</em> &rarr; <em>Gateway</em> &rarr; <em>Auth Filter</em> &rarr; <em>Microservice</em> &rarr; <em>Database</em>).</li>
+        <li><strong>Blast Radius Engine</strong>: Calculates recursive dependencies to simulate loss vectors and downstream system bottlenecks.</li>
+        <li><strong>Digital Twin Sandbox</strong>: Uses React state systems on the frontend to clone graph topologies, enabling operators to edit paths, sever links, load-test traffic surges, and inject attack vectors in an isolated sandbox overlay.</li>
+    </ul>
+
+    <h3>2.3 Generative AI & Persistent Memory</h3>
+    <p>Standard RAG frameworks fail at security codebase reasoning because they lack structural context. Aurenity X utilizes a <strong>GraphRAG</strong> architecture:</p>
+    <ul>
+        <li>Encodings translate code chunks into vector space in <strong>Qdrant</strong>.</li>
+        <li>Queries retrieve semantic context from <strong>Qdrant</strong> combined with topological context (nodes and edges) from <strong>Neo4j</strong>.</li>
+        <li>GPT-4o acts as the core reasoning engine, guided by <strong>LangGraph</strong> (multi-step workflow logic) and <strong>CrewAI</strong> (autonomous agents).</li>
+        <li><strong>Mem0</strong> provides persistent user/infrastructure memory. The Copilot remembers prior remediation steps, database configurations, and environment fixes across scan iterations.</li>
+    </ul>
+
+    <h2>3. Key Technical Decisions</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Choice</th>
+                <th>Category</th>
+                <th>Justification</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>FastAPI + Asyncio</strong></td>
+                <td>Backend</td>
+                <td>Delivers high-throughput concurrency for asynchronous codebase parsing and WebSocket streaming. Essential for real-time War Room simulations.</td>
+            </tr>
+            <tr>
+                <td><strong>Neo4j + GraphRAG</strong></td>
+                <td>DB / AI</td>
+                <td>Standard vector search cannot capture API cascade chains. Graph database structures allow RAG to retrieve physical connection pathways and downstream dependent endpoints, resulting in accurate risk summaries.</td>
+            </tr>
+            <tr>
+                <td><strong>Qdrant Vector DB</strong></td>
+                <td>DB / Embeddings</td>
+                <td>Provides rapid, sub-millisecond similarity scoring of semantic API code chunks for vector-based code indexing.</td>
+            </tr>
+            <tr>
+                <td><strong>Next.js 15 App Router</strong></td>
+                <td>Frontend</td>
+                <td>Enables static page generation, server component routing, and dynamic client interactivity, providing a cohesive single-page application experience.</td>
+            </tr>
+            <tr>
+                <td><strong>Three.js WebGL Holograms</strong></td>
+                <td>Visualization</td>
+                <td>Custom 3D meshes render network topology dynamically, turning structural layout vectors into a visual matrix that lets security engineers see threats travel.</td>
+            </tr>
+            <tr>
+                <td><strong>Supabase (PostgreSQL)</strong></td>
+                <td>Primary DB</td>
+                <td>Relational data persistence with integrated custom REST-client fallbacks to JSON files to safeguard telemetry even if remote network timeouts occur.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>4. Emerging Technology Advantages</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Traditional Approach</th>
+                <th>Aurenity Approach</th>
+                <th>Advantage</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Dashboarding</strong></td>
+                <td>Static tables and pie charts</td>
+                <td>Living Digital Twin</td>
+                <td>Live infrastructure visualizations let engineers simulate changes instantly.</td>
+            </tr>
+            <tr>
+                <td><strong>AI Assistants</strong></td>
+                <td>Stateless, single LLM chatbots</td>
+                <td>Multi-Agent Crew (LangGraph + CrewAI + Mem0)</td>
+                <td>Agents coordinate to audit findings, remember previous configurations, and suggest fixes.</td>
+            </tr>
+            <tr>
+                <td><strong>Information Context</strong></td>
+                <td>Plain text / Relational database</td>
+                <td>Graph-Native GraphRAG (Neo4j)</td>
+                <td>The AI reasons using actual API connection paths, preventing hallucination.</td>
+            </tr>
+            <tr>
+                <td><strong>Visual Mapping</strong></td>
+                <td>2D box diagrams or text lists</td>
+                <td>Interactive 3D Holograms (WebGL)</td>
+                <td>Visual representation of complex network paths makes threat vectors obvious.</td>
+            </tr>
+            <tr>
+                <td><strong>Security Stance</strong></td>
+                <td>Reactive log analysis</td>
+                <td>Predictive ML Forecasters</td>
+                <td>Simulates decay risk metrics (e.g. Zombie probabilities) up to 90 days out.</td>
+            </tr>
+            <tr>
+                <td><strong>Root Cause Analysis</strong></td>
+                <td>Manual log tracing</td>
+                <td>AI-Powered Root Cause Engine</td>
+                <td>Automatically traces compromise paths back to the vulnerable source route.</td>
+            </tr>
+            <tr>
+                <td><strong>Understanding</strong></td>
+                <td>Basic CPU metric monitoring</td>
+                <td>Autonomous Cognitive Infrastructure Cognition</td>
+                <td>The immune system learns code context, routing limits, and authorization scopes.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>5. Generative AI Architecture</h2>
+    <p>Aurenity X's Cognitive Layer relies on a GraphRAG pipeline connected to OpenAI's GPT-4o. Rather than querying the LLM directly with plain repository code, the request passes through a multi-tiered context parser:</p>
+    
+    <div class="code-block" style="text-align: center;">
+GitHub Repository Code
+         ↓
+Code Extraction & Metadata Generation
+         ↓
+Topological Relationship Mapping (Neo4j Graph)
+         ↓
+Vector Embedding Generation (Qdrant)
+         ↓
+GraphRAG Hybrid Context Retrieval (Graph + Vector)
+         ↓
+System Prompt Formulation (Structured System, Agent, & Graph Contexts)
+         ↓
+GPT-4o Reasoning Engine
+         ↓
+Dynamic Output Generation (Risk Explanations & Remediation Scripts)
+    </div>
+
+    <h3>Prompting Strategy</h3>
+    <ul>
+        <li><strong>Structured System Prompting</strong>: Constrains output variables to JSON parameters or explicit cybersecurity playbooks.</li>
+        <li><strong>Role-Based Agent Prompting</strong>: Instantiates dedicated personas (e.g., Red Team Intrusion Agent, Blue Team Defense Analyst) inside CrewAI.</li>
+        <li><strong>Context-Aware Infrastructure Prompting</strong>: Hydrates the LLM prompt template with live JSON schemas of the scanned API endpoints, database engines, and security scores.</li>
+        <li><strong>Graph-Augmented Prompting</strong>: Appends Neo4j routing paths to context windows, forcing the AI to evaluate risk implications based on actual network connections.</li>
+    </ul>
+
+    <h3>GraphRAG Selection Justification</h3>
+    <p>Standard RAG frameworks retrieve disjointed code chunks. For APIs, this lacks context: a vulnerability in a Gateway controller is irrelevant if the caller cannot query it. By integrating <strong>Neo4j</strong> into the retrieval loop, GraphRAG queries actual parent-child route structures, ensuring that AI risk explanations and remediation suggestions evaluate the entire transaction journey.</p>
+
+    <h2>6. Conclusion</h2>
+    <p>Aurenity X combines graph-native intelligence, cognitive AI, infrastructure memory, predictive security analytics, and digital twin technology to transform API security from reactive monitoring into autonomous infrastructure cognition.</p>
+
+</body>
+</html>
